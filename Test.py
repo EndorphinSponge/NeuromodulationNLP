@@ -1,13 +1,38 @@
 # -*- coding: utf-8 -*-
 
+# # General
 # import pandas as pd
+# import json
+# import re
+# import time
 # import numpy as np
 # import math
-import spacy 
-import textacy
-from spacy import displacy
-from word2number import w2n
 
+# # Spacy
+# import spacy 
+# from spacy.lang.en import English # Imports English model 
+# from spacy.pipeline import EntityRuler # Allows creation of rules for entities 
+# from spacy import displacy
+
+
+# # Plotting tools
+# import networkx as nx
+# import matplotlib.pyplot as plt
+# from collections import Counter
+
+# # Misc
+# from word2number import w2n
+# import os
+# os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
+
+
+from global_functions import *
+
+
+#%%
+importExcelData3("Data.xls")
+df = extractNounChunksRoot("Data.xls", "stimulation", "Modality", "AB")
+graphTermFrequencies(df, "Modality")
 
 #%% Raw data 
 raw = pd.read_excel('Data.xls', skiprows=1) # remember to skip first row which contains copyright info 
