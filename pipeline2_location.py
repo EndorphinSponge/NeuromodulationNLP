@@ -11,7 +11,7 @@ from spacy.language import Language;
 
 #%%
 
-with open("NeuroNames.json", "r", encoding = "utf-8") as f:
+with open("data/NeuroNames.json", "r", encoding = "utf-8") as f:
     targets_json = json.load(f);
     targets_main = set([entry["standardName"] for entry in targets_json]);
     targets_syn_groups = [{syn["synonymName"] for syn in entry["synonyms"] if (syn["synonymLanguage"] == "English" or syn["synonymLanguage"] == "Latin")} for entry in targets_json if "synonyms" in entry]; # Filter to only get English and Latin names
@@ -60,10 +60,3 @@ def extractTargets(doc):
 
 
 nlp_sm.add_pipe("extractTargets");
-#%%
-# nlp_sm.remove_pipe("extractTargets"); # Run optionally to disable pipe 
-
-#%%
-
-doc = nlp_sm("temporal cortex is a location. Lobules 4-5 is also a location");
-print(doc._.targets_text);

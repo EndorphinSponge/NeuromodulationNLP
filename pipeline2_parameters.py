@@ -102,8 +102,3 @@ def extractParameters(doc):
 nlp_sm.add_pipe("extractParameters");
 #%%
 # nlp_sm.remove_pipe("extractParameters"); # Run optionally to disable pipe 
-
-#%%
-
-doc = nlp_sm("Thalamus is a location. Lobules 4-5 is also a location");
-print(doc._.targets_text);

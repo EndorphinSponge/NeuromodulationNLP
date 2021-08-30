@@ -9,11 +9,13 @@ from spacy.tokens import Span, Doc;
 from spacy.lang.en import English;
 from spacy.language import Language;
 
-#%% Load data 
-    
-# texts = importExcelData3("Data.xls");
-# texts = importExcelData3("Embase Data.xls");
-texts = importExcelData3("Neuromodulation Data.xls");
+#%% Load data - ENTRY POINT for data 
+
+# Comment in/out the assignment lines to assign the proper dataset to "texts" variable
+
+# texts = importExcelData3("data/Data.xls");
+texts = importExcelData3("data/Embase Data.xls");
+# texts = importExcelData3("data/Neuromodulation Data.xls");
 docs = [(texts["AB"][index], {"mh":texts["MH"][index]}) for index in texts.index];
 docs = list(nlp_sm.pipe(docs, as_tuples=True));
 
@@ -69,9 +71,13 @@ for (doc, context) in docs:
     doc._.disease_broad = [*{*[keyword for keyword in keywords if keyword.strip("*") in diseases_broad]}];
     doc._.disease_narrow = [*{*[keyword for keyword in keywords if keyword.strip("*") in diseases_narrow]}];
     # Only get main keywords
-    doc._.modality = [item.strip("*") for item in doc._.modality if item.startswith("*")];
-    doc._.disease_broad = [item.strip("*") for item in doc._.disease_broad if item.startswith("*")];
-    doc._.disease_narrow = [item.strip("*") for item in doc._.disease_narrow if item.startswith("*")];
+    # doc._.modality = [item.strip("*") for item in doc._.modality if item.startswith("*")];
+    # doc._.disease_broad = [item.strip("*") for item in doc._.disease_broad if item.startswith("*")];
+    # doc._.disease_narrow = [item.strip("*") for item in doc._.disease_narrow if item.startswith("*")];
+    # Strip asterisk
+    doc._.modality = [item.strip("*") for item in doc._.modality];
+    doc._.disease_broad = [item.strip("*") for item in doc._.disease_broad];
+    doc._.disease_narrow = [item.strip("*") for item in doc._.disease_narrow];
     print(doc._.modality);
     print(doc._.disease_broad);
     print(doc._.disease_narrow);
