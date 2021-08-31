@@ -1,0 +1,65 @@
+Cluster #0
+injury tbi
+brain injury tbi
+traumatic brain injury tbi
+following tbi
+tbi patients
+severe tbi
+patients tbi
+mild tbi
+brain tissue
+moderate severe
+
+
+Cluster #1
+clinical article
+severe tbi
+tbi patients
+drug therapy
+severe traumatic
+severe traumatic brain
+severe traumatic brain injury
+glasgow coma
+injury tbi
+brain injury tbi
+
+
+Cluster #2
+clinical study
+major clinical study
+major clinical
+clinical study male
+major clinical study male
+study male
+controlled study
+retrospective study
+cohort analysis
+adult article
+
+
+Cluster #3
+mild traumatic
+mild traumatic brain
+mild traumatic brain injury
+injury mtbi
+brain injury mtbi
+traumatic brain injury mtbi
+white matter
+posttraumatic stress
+mild tbi
+control group
+
+
+Cluster #4
+endogenous compound
+animal experiment
+experiment animal
+animal experiment animal
+animal model
+experiment animal model
+animal experiment animal model
+controlled study
+drug therapy
+animal tissue
+
+
