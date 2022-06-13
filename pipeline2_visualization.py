@@ -270,15 +270,15 @@ for (doc, context) in docs:
 net = Network();
 
 for modality in nodes_modalities:
-    net.add_node(modality, color = "red", size = math.log(nodes_modalities[modality], 2), mass = math.log(nodes_modalities[modality], 2)); # Need to scale down in order to match sizes of locations
+    net.add_node(modality, color = "red", size = math.log(nodes_modalities[modality], 1.2), mass = math.log(nodes_modalities[modality], 2)); # Need to scale down in order to match sizes of locations
     
 for location in nodes_locations:
     if nodes_locations[location] >= 10: # Only add the node if there is 10 or more hits 
-        net.add_node(location, color = "green", size = math.log(nodes_locations[location], 2), mass = math.log(nodes_modalities[modality], 2));
+        net.add_node(location, color = "green", size = math.log(nodes_locations[location], 1.2), mass = math.log(nodes_modalities[modality], 2));
         
 for disease in nodes_diseases:
     if nodes_diseases[disease] >= 10: # Only add the node if there is 10 or more hits 
-        net.add_node(disease, color = "blue", size = math.log(nodes_diseases[disease], 2), mass = math.log(nodes_modalities[modality], 2));
+        net.add_node(disease, color = "blue", size = math.log(nodes_diseases[disease], 1.2), mass = math.log(nodes_modalities[modality], 2));
     
 for (node1, node2) in edges:
     if (nodes_locations[node1] >= 10 or nodes_modalities[node1] >= 10 or nodes_diseases[node1] >= 10) \

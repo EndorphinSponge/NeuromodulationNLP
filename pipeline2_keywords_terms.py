@@ -13,13 +13,14 @@ from spacy.language import Language;
 
 # Comment in/out the assignment lines to assign the proper dataset to "texts" variable
 
+texts = importExcelData3("data/Demo data.xls");
 # texts = importExcelData3("data/Data.xls");
-texts = importExcelData3("data/Embase Data.xls");
+# texts = importExcelData3("data/Embase Data.xls");
 # texts = importExcelData3("data/Neuromodulation Data.xls");
 docs = [(texts["AB"][index], {"mh":texts["MH"][index]}) for index in texts.index];
 docs = list(nlp_sm.pipe(docs, as_tuples=True));
 
-#%%
+        #%%
 
 Doc.set_extension("modality", default = None, force = True); # Force true to avoid having to restart kernel every debug cycle
 modalities = ["brain depth stimulation",
