@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-
-
 # Built-ins
 import math
 import re
@@ -8,6 +6,7 @@ import time
 import json
 from collections import Counter
 import os
+from typing import Union, List
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 # General
@@ -41,11 +40,13 @@ from word2number import w2n
 #%% Model loading LG
 # nlp_lg = spacy.load("en_core_web_lg") # Loads in model as an object which can be used as a function to analyze other strings 
 #%% Model loading SM
-nlp_sm = spacy.load("en_core_web_sm");
+nlp_sm = spacy.load("en_core_web_sm")
 
 #%% Diagnostic functions
-def getWordIndex(doc: "doc, NLP-processed str", word: str) -> \
-    "Obtains the index (with respect to the doc) of first occurence of the word within the doc":
+def getWordIndex(doc: Union[Span, Doc], word: str):
+    """
+    Obtains the index (with respect to the doc) of first occurence of the word within the doc
+    """
     keyword = word
     keyword_indices = []
     for token in doc:
@@ -53,8 +54,10 @@ def getWordIndex(doc: "doc, NLP-processed str", word: str) -> \
             keyword_indices.append(token.i)
     return min(keyword_indices)
 
-def calcSimilarity(doc: "doc, NLP-processed str", word: str) -> \
-    "Obtains top 5 similar entries in the doc to the word specified":
+def calcSimilarity(doc: Union[Span, Doc], word: str):
+    """
+    Obtains top 5 similar entries in the doc to the word specified
+    """
     similarity_scores = []
     index = getWordIndex(doc, word)
     for token in doc:
@@ -64,48 +67,65 @@ def calcSimilarity(doc: "doc, NLP-processed str", word: str) -> \
     similarity_scores.sort(key=lambda tup: tup[1], reverse=True) # Sort list based on second item in tuple 
     return similarity_scores[0:5]
 
-def renderParseTree(doc: "doc, NLP-processed str") -> \
-    "Generates HTML rendering of parse tree from given doc":
+def renderParseTree(doc: Union[Span, Doc]):
+    """
+    Generates HTML rendering of parse tree from given doc
+    """
     html = displacy.render(list(doc.sents), options = {"compact":True}, jupyter=False) # Renders parse tree of sentences in a doc
     with open("Syntactical_tree.html", "w") as file:
         file.write(html)
         
-def printDepLabels(model: "NLP model") -> \
-    "Prints list of DEP labels in given model":
+def printDepLabels(model: Language):
+    """
+    Prints list of DEP labels in a given spacy language model
+    """
     for label in model.get_pipe("parser").labels:
         print(label, " -- ", spacy.explain(label))
         
-def getNounChunks(doc: "doc, NLP-processed str") -> \
-    "Returns noun chunks within docs as a list":
+def getNounChunks(doc: Union[Span, Doc]):
+    """
+    Returns noun chunks within docs as a list
+    """
     chunks = []
     for chunk in doc.noun_chunks:
         chunks.append((chunk.text, chunk.label_))
     return chunks
 
-def getDepLabels(doc: "doc, NLP-processed str", sentence: int) -> \
-    "Returns DEP labels for each token within a sentence of docs as a list":
+def getDepLabels(doc: Union[Span, Doc], sentence: int):
+    """
+    Returns DEP labels for each token within a sentence of docs as a list
+    """
     deps = []
     for token in list(doc.sents)[sentence]:
         deps.append((token.text, token.dep_))
     return deps
 
-def getSentencesContaining(doc: "doc, NLP-processed str", *words: "any number of str words") -> \
-    "Returns a list of all the sentences containing the specified strings":
+def getSentencesContaining(doc: Union[Span, Doc], *words: List[str]):
+    """
+    Returns a list of all the sentences containing the specified strings
+    """
     sentences = []
     for sentence in doc.sents:
         if any(word in sentence.text for word in words):
             sentences.append(sentence.text)
     return sentences
 
-def renderParseTreeKeyword(doc: "doc, NLP-processed str", model: "NLP model", *keywords: "Keyword strs to search for") -> \
-    "Renders parse tree of sentences within a doc with the specified keywords using the given model":
+def renderParseTreeKeyword(doc: Union[Span, Doc], model: Language, *keywords: List[str]):
+    """
+    Renders parse tree of sentences within a doc with the specified keywords using the given model
+    """
     sentences = getSentencesContaining(doc, *keywords) # Asterisk needed to unpack keyword arguments, otherwise gets passed as a list 
     text = " ".join(sentences)
     doc = processText(text, model)
     renderParseTree(doc)
     
-def printNounChunks(data: "XLS file/path", subset: "int of abstract number", model) -> \
-    "Prints noun chunk analysis of an abstract using the given model":
+def printNounChunks(data: Union[str, os.PathLike], subset: int, model):
+    """
+    Prints noun chunk analysis of an abstract using the given model
+    data: Path to excel file
+    subset: Index of abstract within the excel file
+    # FIXME
+    """
     text = importExcelData(data, subset) # Tested 0-5
     doc = processText(text, model)
     for chunk in doc.noun_chunks:
@@ -114,10 +134,14 @@ def printNounChunks(data: "XLS file/path", subset: "int of abstract number", mod
         print("Environ:", list(chunk.lefts), "<", chunk.text, ">", list(chunk.rights))
         print("")
 
-
 #%% Pipeline functions 
-def importExcelData1(data: "str of Excel file name/filepath", ab_num: "Abstract index to return", filt: "Filter str" = None) -> \
-    "Returns str abstract based on imported Excel data filterd using preliminary str filter":
+def importExcelData1(data: Union[str, os.PathLike], ab_num: int, filt: str = None):
+    """
+    Returns a single str abstract based on imported Excel data filterd using preliminary str filter
+    data: Path to Excel file
+    ab_num: Index of the specific abstract to extract from the Excel file 
+    filt: String filter to apply to abstract #FIXME
+    """
     raw = pd.read_excel(data, skiprows=1) # remember to skip first row which contains copyright info 
     raw = raw.drop_duplicates(subset='TI') # drop duplicates based on title 
     raw = raw.dropna (subset = ["AB"])
@@ -127,8 +151,10 @@ def importExcelData1(data: "str of Excel file name/filepath", ab_num: "Abstract 
     filtered = filtered.reset_index() # to re-index dataframe so it becomes iterable again
     return filtered["AB"][ab_num]
 
-def importExcelData2(data: "str of Excel file name/filepath", filt: "Filter str" = None) -> \
-    "Returns iterable of str abstracts based on imported Excel data filterd using preliminary str filter":
+def importExcelData2(data: Union[str, os.PathLike], filt: str = None):
+    """
+    Returns iterable of str abstracts based on imported Excel data filterd using preliminary str filter
+    """
     raw = pd.read_excel(data, skiprows=1) # remember to skip first row which contains copyright info 
     raw = raw.drop_duplicates(subset='TI') # drop duplicates based on title 
     raw = raw.dropna (subset = ["AB"])    
@@ -138,8 +164,10 @@ def importExcelData2(data: "str of Excel file name/filepath", filt: "Filter str"
     filtered = filtered.reset_index() # to re-index dataframe so it becomes iterable again
     return filtered["AB"]
 
-def importExcelData3(data: "str of Excel file name/filepath", filt: "Filter str" = None) -> \
-    "Returns entire processed DF based on imported Excel data filterd using preliminary str filter":
+def importExcelData3(data: Union[str, os.PathLike], filt: str = None):
+    """
+    Returns entire processed DF based on imported Excel data filterd using preliminary str filter
+    """
     raw = pd.read_excel(data, skiprows=1); # remember to skip first row which contains copyright info 
     raw = raw.drop_duplicates(subset='TI'); # drop duplicates based on title 
     raw = raw.dropna(subset = ["AB"]);
@@ -151,13 +179,19 @@ def importExcelData3(data: "str of Excel file name/filepath", filt: "Filter str"
     filtered = filtered.reset_index(); # to re-index dataframe so it becomes iterable again
     return filtered;
 
-def processText(text: str, model: "SpaCy NLP model") -> \
-    "Returns processed text by taking raw str and processesing it through an NLP model":
+def processText(text: str, model: Language):
+    """
+    Returns processed text by taking raw str and processesing it through an NLP model
+    """
     processed_text = model(text)
     return processed_text
 
-def extractNounChunksRoot(data: str, root: str, root_column: "str with label for column for extracted info", column: "extra column to include in output") -> \
-    "Returns DF with extracted noun chunks based on root and other additional columns in the original DF":
+def extractNounChunksRoot(data: Union[str, os.PathLike], root: str, root_column: str, column: str):
+    """
+    Returns DF with extracted noun chunks based on root and other additional columns in the original DF
+    root_column: Label for column for output extracted info
+    column: Label of a column from the original dataframe to return in the output
+    """
     st = time.time()
     df = pd.DataFrame(columns = ["ORN", root_column, column]) # Should replace Index with ORN with reference to original DF, need to update import function 
     data = importExcelData3(data)
@@ -174,15 +208,11 @@ def extractNounChunksRoot(data: str, root: str, root_column: "str with label for
     return df
 
 
-
-def getLabel(doc: "doc, NLP-processed str") -> \
-    "Retrieves labels from NLP-processed text and stores ":
-    pass
-
-def identifyTriples(labelled: "Labelled str") -> "___ returns labels":
-    pass
-
-def graphTermFrequencies(df: "DataFrame", column_name: "Name of column search terms") -> "":
+def graphTermFrequencies(df: pd.DataFrame, column_name: str):
+    """
+    column_name: Name of column search terms
+    # FIXME
+    """
     st = time.time()
     word_list = []
     for index, row in df.iterrows():
