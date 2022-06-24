@@ -1,17 +1,12 @@
 # -*- coding: utf-8 -*-
 # Built-ins
-import math
-import re
 import time
-import json
 from collections import Counter
 import os
 from typing import Union, List
-os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 # General
 import pandas as pd
-import numpy as np
 
 # Spacy
 import spacy 
@@ -27,20 +22,6 @@ from spacy.language import Language;
 # Plotting tools
 import networkx as nx
 import matplotlib.pyplot as plt
-
-
-# Misc
-from word2number import w2n
-
-
-
-
-#%% Model loading TRF
-# nlp_trf = spacy.load("en_core_web_trf") # Loads in model as an object which can be used as a function to analyze other strings 
-#%% Model loading LG
-# nlp_lg = spacy.load("en_core_web_lg") # Loads in model as an object which can be used as a function to analyze other strings 
-#%% Model loading SM
-nlp_sm = spacy.load("en_core_web_sm")
 
 #%% Diagnostic functions
 def getWordIndex(doc: Union[Span, Doc], word: str):
@@ -119,14 +100,14 @@ def renderParseTreeKeyword(doc: Union[Span, Doc], model: Language, *keywords: Li
     doc = processText(text, model)
     renderParseTree(doc)
     
-def printNounChunks(data: Union[str, os.PathLike], subset: int, model):
+def printNounChunks(data: Union[str, os.PathLike], ab_num: int, model):
     """
     Prints noun chunk analysis of an abstract using the given model
     data: Path to excel file
     subset: Index of abstract within the excel file
     # FIXME
     """
-    text = importExcelData(data, subset) # Tested 0-5
+    text = importExcelData1(data, ab_num) # Tested 0-5
     doc = processText(text, model)
     for chunk in doc.noun_chunks:
         print("Root:",chunk.root)
@@ -186,7 +167,7 @@ def processText(text: str, model: Language):
     processed_text = model(text)
     return processed_text
 
-def extractNounChunksRoot(data: Union[str, os.PathLike], root: str, root_column: str, column: str):
+def extractNounChunksRoot(data: Union[str, os.PathLike], root: str, root_column: str, column: str, model):
     """
     Returns DF with extracted noun chunks based on root and other additional columns in the original DF
     root_column: Label for column for output extracted info
@@ -198,7 +179,7 @@ def extractNounChunksRoot(data: Union[str, os.PathLike], root: str, root_column:
     for index, row in data.iterrows():
         print(index)
         spans = []
-        doc = processText(str(row[column]), nlp_lg)
+        doc = processText(str(row[column]), model)
         for chunk in doc.noun_chunks:
             if chunk.root.text == root:
                 spans.append(chunk.text)

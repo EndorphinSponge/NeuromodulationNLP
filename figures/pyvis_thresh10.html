@@ -1,0 +1,132 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vis-network@latest/styles/vis-network.css" type="text/css" />
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vis-network@latest/dist/vis-network.min.js"> </script>
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+
+<style type="text/css">
+
+        #mynetwork {
+            width: 500px;
+            height: 500px;
+            background-color: #ffffff;
+            border: 1px solid lightgray;
+            position: relative;
+            float: left;
+        }
+
+        
+
+        
+        #config {
+            float: left;
+            width: 400px;
+            height: 600px;
+        }
+        
+
+        
+</style>
+
+</head>
+
+<body>
+<div id = "mynetwork"></div>
+
+
+<div id = "config"></div>
+
+<script type="text/javascript">
+
+    // initialize global variables.
+    var edges;
+    var nodes;
+    var network; 
+    var container;
+    var options, data;
+
+    
+    // This method is responsible for drawing the graph, returns the drawn network
+    function drawGraph() {
+        var container = document.getElementById('mynetwork');
+        
+        
+
+        // parsing and collecting nodes and edges from the python
+        nodes = new vis.DataSet([{"color": "red", "id": "brain depth stimulation", "label": "brain depth stimulation", "mass": 8.51175265376738, "shape": "dot", "size": 32.35984519510268}, {"color": "red", "id": "transcranial magnetic stimulation", "label": "transcranial magnetic stimulation", "mass": 4.700439718141093, "shape": "dot", "size": 17.870056592943232}, {"color": "red", "id": "vagus nerve stimulation", "label": "vagus nerve stimulation", "mass": 5.807354922057605, "shape": "dot", "size": 22.078309123283123}, {"color": "green", "id": "temporal lobe", "label": "temporal lobe", "mass": 5.807354922057605, "shape": "dot", "size": 22.364538322332503}, {"color": "green", "id": "anterior nuclear group", "label": "anterior nuclear group", "mass": 5.807354922057605, "shape": "dot", "size": 15.539650899636019}, {"color": "green", "id": "frontal lobe", "label": "frontal lobe", "mass": 5.807354922057605, "shape": "dot", "size": 16.95379585230049}, {"color": "green", "id": "motor cortex", "label": "motor cortex", "mass": 5.807354922057605, "shape": "dot", "size": 19.008920084619653}, {"color": "green", "id": "insula", "label": "insula", "mass": 5.807354922057605, "shape": "dot", "size": 14.853154222254883}, {"color": "green", "id": "archicortex", "label": "archicortex", "mass": 5.807354922057605, "shape": "dot", "size": 18.83478434953233}, {"color": "green", "id": "neocortex", "label": "neocortex", "mass": 5.807354922057605, "shape": "dot", "size": 12.62925313651334}, {"color": "green", "id": "thalamus", "label": "thalamus", "mass": 5.807354922057605, "shape": "dot", "size": 20.878839324920357}, {"color": "green", "id": "head of the caudate nucleus", "label": "head of the caudate nucleus", "mass": 5.807354922057605, "shape": "dot", "size": 14.0682725760193}, {"color": "green", "id": "vagus nerve", "label": "vagus nerve", "mass": 5.807354922057605, "shape": "dot", "size": 17.43103715343727}, {"color": "green", "id": "amygdala", "label": "amygdala", "mass": 5.807354922057605, "shape": "dot", "size": 15.207136067695723}, {"color": "blue", "id": "tonic clonic seizure", "label": "tonic clonic seizure", "mass": 5.807354922057605, "shape": "dot", "size": 21.776316434370028}, {"color": "blue", "id": "temporal lobe epilepsy", "label": "temporal lobe epilepsy", "mass": 5.807354922057605, "shape": "dot", "size": 21.565336002301496}, {"color": "blue", "id": "frontal lobe epilepsy", "label": "frontal lobe epilepsy", "mass": 5.807354922057605, "shape": "dot", "size": 16.149702925661238}, {"color": "blue", "id": "benign childhood epilepsy", "label": "benign childhood epilepsy", "mass": 5.807354922057605, "shape": "dot", "size": 12.62925313651334}, {"color": "blue", "id": "absence", "label": "absence", "mass": 5.807354922057605, "shape": "dot", "size": 12.62925313651334}, {"color": "blue", "id": "lennox gastaut syndrome", "label": "lennox gastaut syndrome", "mass": 5.807354922057605, "shape": "dot", "size": 14.0682725760193}, {"color": "blue", "id": "complex partial seizure", "label": "complex partial seizure", "mass": 5.807354922057605, "shape": "dot", "size": 16.149702925661238}]);
+        edges = new vis.DataSet([{"from": "tonic clonic seizure", "to": "brain depth stimulation", "width": 2.8502198590705463}, {"from": "temporal lobe epilepsy", "to": "anterior nuclear group", "width": 1.160964047443681}, {"from": "temporal lobe epilepsy", "to": "temporal lobe", "width": 2.3502198590705463}, {"from": "temporal lobe epilepsy", "to": "brain depth stimulation", "width": 2.836212670985748}, {"from": "anterior nuclear group", "to": "temporal lobe", "width": 1.0}, {"from": "anterior nuclear group", "to": "brain depth stimulation", "width": 2.04373142062517}, {"from": "temporal lobe", "to": "brain depth stimulation", "width": 2.941321524680921}, {"from": "brain depth stimulation", "to": "transcranial magnetic stimulation", "width": 2.3502198590705463}, {"from": "brain depth stimulation", "to": "frontal lobe epilepsy", "width": 2.1239637567217926}, {"from": "transcranial magnetic stimulation", "to": "temporal lobe epilepsy", "width": 0.7924812503605781}, {"from": "transcranial magnetic stimulation", "to": "frontal lobe epilepsy", "width": 0.7924812503605781}, {"from": "temporal lobe epilepsy", "to": "frontal lobe epilepsy", "width": 1.7924812503605783}, {"from": "tonic clonic seizure", "to": "frontal lobe epilepsy", "width": 0.5}, {"from": "tonic clonic seizure", "to": "frontal lobe", "width": 0.0}, {"from": "brain depth stimulation", "to": "frontal lobe", "width": 2.2297158093186487}, {"from": "frontal lobe epilepsy", "to": "frontal lobe", "width": 1.6609640474436813}, {"from": "brain depth stimulation", "to": "motor cortex", "width": 2.5}, {"from": "vagus nerve stimulation", "to": "brain depth stimulation", "width": 2.9036774610288023}, {"from": "vagus nerve stimulation", "to": "tonic clonic seizure", "width": 1.850219859070546}, {"from": "vagus nerve stimulation", "to": "benign childhood epilepsy", "width": 1.403677461028802}, {"from": "tonic clonic seizure", "to": "benign childhood epilepsy", "width": 0.7924812503605781}, {"from": "brain depth stimulation", "to": "benign childhood epilepsy", "width": 1.6609640474436813}, {"from": "temporal lobe", "to": "insula", "width": 1.160964047443681}, {"from": "brain depth stimulation", "to": "insula", "width": 1.9534452978042594}, {"from": "temporal lobe epilepsy", "to": "insula", "width": 1.0}, {"from": "brain depth stimulation", "to": "archicortex", "width": 2.477098155193438}, {"from": "brain depth stimulation", "to": "neocortex", "width": 1.6609640474436813}, {"from": "archicortex", "to": "anterior nuclear group", "width": 0.5}, {"from": "archicortex", "to": "neocortex", "width": 1.0}, {"from": "anterior nuclear group", "to": "neocortex", "width": 0.7924812503605781}, {"from": "frontal lobe", "to": "motor cortex", "width": 0.7924812503605781}, {"from": "frontal lobe epilepsy", "to": "motor cortex", "width": 0.5}, {"from": "temporal lobe", "to": "thalamus", "width": 1.7297158093186489}, {"from": "brain depth stimulation", "to": "thalamus", "width": 2.7459265481648374}, {"from": "temporal lobe", "to": "archicortex", "width": 1.403677461028802}, {"from": "archicortex", "to": "temporal lobe epilepsy", "width": 1.0}, {"from": "head of the caudate nucleus", "to": "tonic clonic seizure", "width": 0.7924812503605781}, {"from": "head of the caudate nucleus", "to": "temporal lobe", "width": 1.0}, {"from": "head of the caudate nucleus", "to": "brain depth stimulation", "width": 1.850219859070546}, {"from": "tonic clonic seizure", "to": "temporal lobe", "width": 1.6609640474436813}, {"from": "tonic clonic seizure", "to": "insula", "width": 0.0}, {"from": "motor cortex", "to": "transcranial magnetic stimulation", "width": 1.5}, {"from": "thalamus", "to": "neocortex", "width": 0.5}, {"from": "vagus nerve stimulation", "to": "anterior nuclear group", "width": 0.7924812503605781}, {"from": "vagus nerve stimulation", "to": "vagus nerve", "width": 2.2617809780285065}, {"from": "brain depth stimulation", "to": "vagus nerve", "width": 2.2924812503605785}, {"from": "anterior nuclear group", "to": "vagus nerve", "width": 0.5}, {"from": "vagus nerve stimulation", "to": "temporal lobe epilepsy", "width": 1.850219859070546}, {"from": "brain depth stimulation", "to": "absence", "width": 1.6609640474436813}, {"from": "brain depth stimulation", "to": "amygdala", "width": 2.0}, {"from": "head of the caudate nucleus", "to": "amygdala", "width": 0.5}, {"from": "thalamus", "to": "insula", "width": 0.0}, {"from": "archicortex", "to": "thalamus", "width": 1.5}, {"from": "tonic clonic seizure", "to": "lennox gastaut syndrome", "width": 1.0}, {"from": "brain depth stimulation", "to": "lennox gastaut syndrome", "width": 1.850219859070546}, {"from": "motor cortex", "to": "archicortex", "width": 0.0}, {"from": "vagus nerve stimulation", "to": "thalamus", "width": 1.5849625007211563}, {"from": "thalamus", "to": "vagus nerve", "width": 1.403677461028802}, {"from": "temporal lobe epilepsy", "to": "absence", "width": 1.0}, {"from": "frontal lobe epilepsy", "to": "temporal lobe", "width": 1.403677461028802}, {"from": "frontal lobe epilepsy", "to": "absence", "width": 0.5}, {"from": "temporal lobe", "to": "absence", "width": 0.5}, {"from": "temporal lobe epilepsy", "to": "thalamus", "width": 1.292481250360578}, {"from": "thalamus", "to": "anterior nuclear group", "width": 1.5}, {"from": "vagus nerve stimulation", "to": "transcranial magnetic stimulation", "width": 1.403677461028802}, {"from": "head of the caudate nucleus", "to": "frontal lobe", "width": 1.0}, {"from": "head of the caudate nucleus", "to": "archicortex", "width": 0.0}, {"from": "head of the caudate nucleus", "to": "thalamus", "width": 0.0}, {"from": "frontal lobe", "to": "archicortex", "width": 0.5}, {"from": "frontal lobe", "to": "thalamus", "width": 0.7924812503605781}, {"from": "vagus nerve stimulation", "to": "temporal lobe", "width": 1.7297158093186489}, {"from": "temporal lobe epilepsy", "to": "benign childhood epilepsy", "width": 1.403677461028802}, {"from": "temporal lobe", "to": "benign childhood epilepsy", "width": 0.7924812503605781}, {"from": "vagus nerve stimulation", "to": "archicortex", "width": 1.0}, {"from": "archicortex", "to": "vagus nerve", "width": 0.7924812503605781}, {"from": "vagus nerve", "to": "temporal lobe", "width": 1.0}, {"from": "tonic clonic seizure", "to": "archicortex", "width": 1.160964047443681}, {"from": "tonic clonic seizure", "to": "thalamus", "width": 1.6609640474436813}, {"from": "vagus nerve stimulation", "to": "lennox gastaut syndrome", "width": 1.403677461028802}, {"from": "vagus nerve stimulation", "to": "absence", "width": 1.160964047443681}, {"from": "lennox gastaut syndrome", "to": "absence", "width": 1.0}, {"from": "frontal lobe", "to": "temporal lobe epilepsy", "width": 1.0}, {"from": "temporal lobe epilepsy", "to": "motor cortex", "width": 0.5}, {"from": "tonic clonic seizure", "to": "temporal lobe epilepsy", "width": 1.5849625007211563}, {"from": "head of the caudate nucleus", "to": "temporal lobe epilepsy", "width": 0.0}, {"from": "head of the caudate nucleus", "to": "complex partial seizure", "width": 0.7924812503605781}, {"from": "head of the caudate nucleus", "to": "motor cortex", "width": 0.0}, {"from": "head of the caudate nucleus", "to": "transcranial magnetic stimulation", "width": 0.5}, {"from": "tonic clonic seizure", "to": "complex partial seizure", "width": 1.5}, {"from": "tonic clonic seizure", "to": "motor cortex", "width": 0.5}, {"from": "tonic clonic seizure", "to": "transcranial magnetic stimulation", "width": 0.7924812503605781}, {"from": "temporal lobe epilepsy", "to": "complex partial seizure", "width": 0.7924812503605781}, {"from": "complex partial seizure", "to": "motor cortex", "width": 0.0}, {"from": "complex partial seizure", "to": "temporal lobe", "width": 0.5}, {"from": "complex partial seizure", "to": "brain depth stimulation", "width": 2.084962500721156}, {"from": "complex partial seizure", "to": "transcranial magnetic stimulation", "width": 0.0}, {"from": "motor cortex", "to": "temporal lobe", "width": 0.0}, {"from": "temporal lobe", "to": "transcranial magnetic stimulation", "width": 0.7924812503605781}, {"from": "archicortex", "to": "complex partial seizure", "width": 0.0}, {"from": "archicortex", "to": "amygdala", "width": 1.292481250360578}, {"from": "archicortex", "to": "insula", "width": 0.0}, {"from": "amygdala", "to": "insula", "width": 0.0}, {"from": "tonic clonic seizure", "to": "anterior nuclear group", "width": 1.160964047443681}, {"from": "frontal lobe", "to": "temporal lobe", "width": 1.403677461028802}, {"from": "frontal lobe epilepsy", "to": "thalamus", "width": 0.5}, {"from": "tonic clonic seizure", "to": "amygdala", "width": 0.5}, {"from": "temporal lobe epilepsy", "to": "amygdala", "width": 0.5}, {"from": "amygdala", "to": "temporal lobe", "width": 0.5}, {"from": "lennox gastaut syndrome", "to": "thalamus", "width": 0.0}, {"from": "frontal lobe", "to": "neocortex", "width": 0.0}, {"from": "frontal lobe", "to": "insula", "width": 0.5}, {"from": "neocortex", "to": "insula", "width": 0.0}, {"from": "vagus nerve", "to": "tonic clonic seizure", "width": 1.5}, {"from": "vagus nerve stimulation", "to": "complex partial seizure", "width": 1.292481250360578}, {"from": "complex partial seizure", "to": "benign childhood epilepsy", "width": 0.0}, {"from": "complex partial seizure", "to": "vagus nerve", "width": 0.7924812503605781}, {"from": "temporal lobe", "to": "neocortex", "width": 0.5}, {"from": "temporal lobe epilepsy", "to": "neocortex", "width": 0.7924812503605781}, {"from": "temporal lobe epilepsy", "to": "vagus nerve", "width": 0.7924812503605781}, {"from": "lennox gastaut syndrome", "to": "vagus nerve", "width": 0.0}, {"from": "lennox gastaut syndrome", "to": "transcranial magnetic stimulation", "width": 1.0}, {"from": "vagus nerve", "to": "transcranial magnetic stimulation", "width": 0.5}, {"from": "anterior nuclear group", "to": "complex partial seizure", "width": 0.7924812503605781}, {"from": "complex partial seizure", "to": "thalamus", "width": 0.5}, {"from": "anterior nuclear group", "to": "frontal lobe epilepsy", "width": 0.0}, {"from": "vagus nerve stimulation", "to": "neocortex", "width": 0.0}, {"from": "vagus nerve", "to": "neocortex", "width": 0.0}, {"from": "neocortex", "to": "tonic clonic seizure", "width": 0.0}, {"from": "lennox gastaut syndrome", "to": "temporal lobe epilepsy", "width": 1.0}, {"from": "lennox gastaut syndrome", "to": "frontal lobe epilepsy", "width": 0.5}, {"from": "lennox gastaut syndrome", "to": "temporal lobe", "width": 0.5}, {"from": "lennox gastaut syndrome", "to": "benign childhood epilepsy", "width": 1.0}, {"from": "frontal lobe epilepsy", "to": "benign childhood epilepsy", "width": 0.5}, {"from": "thalamus", "to": "transcranial magnetic stimulation", "width": 0.0}, {"from": "vagus nerve stimulation", "to": "frontal lobe epilepsy", "width": 0.5}, {"from": "head of the caudate nucleus", "to": "anterior nuclear group", "width": 0.0}, {"from": "head of the caudate nucleus", "to": "frontal lobe epilepsy", "width": 0.0}, {"from": "frontal lobe", "to": "transcranial magnetic stimulation", "width": 0.0}, {"from": "vagus nerve stimulation", "to": "motor cortex", "width": 0.0}, {"from": "motor cortex", "to": "vagus nerve", "width": 0.0}, {"from": "absence", "to": "frontal lobe", "width": 0.0}, {"from": "tonic clonic seizure", "to": "absence", "width": 0.7924812503605781}, {"from": "benign childhood epilepsy", "to": "absence", "width": 0.7924812503605781}, {"from": "transcranial magnetic stimulation", "to": "benign childhood epilepsy", "width": 0.0}, {"from": "transcranial magnetic stimulation", "to": "absence", "width": 0.5}, {"from": "frontal lobe epilepsy", "to": "insula", "width": 0.0}, {"from": "vagus nerve", "to": "absence", "width": 0.5}, {"from": "vagus nerve", "to": "frontal lobe epilepsy", "width": 0.0}, {"from": "vagus nerve", "to": "benign childhood epilepsy", "width": 0.0}, {"from": "vagus nerve stimulation", "to": "head of the caudate nucleus", "width": 0.0}, {"from": "frontal lobe", "to": "amygdala", "width": 0.0}, {"from": "amygdala", "to": "thalamus", "width": 0.0}, {"from": "lennox gastaut syndrome", "to": "complex partial seizure", "width": 0.0}, {"from": "complex partial seizure", "to": "absence", "width": 0.0}, {"from": "amygdala", "to": "neocortex", "width": 0.0}]);
+
+        // adding nodes and edges to the graph
+        data = {nodes: nodes, edges: edges};
+
+        var options = {
+    "configure": {
+        "enabled": true,
+        "filter": [
+            "physics"
+        ]
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 1,
+            "gravitationalConstant": -12,
+            "springConstant": 0.08,
+            "springLength": 100
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+        
+        
+
+        
+        // if this network requires displaying the configure window,
+        // put it in its div
+        options.configure["container"] = document.getElementById("config");
+        
+
+        network = new vis.Network(container, data, options);
+	 
+        
+
+
+        
+
+        return network;
+
+    }
+
+    drawGraph();
+
+</script>
+</body>
+</html>

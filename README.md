@@ -3,11 +3,11 @@
 NLP-based tool for extracting information from literature on neuromodulation
 
 Architecture: 
+- **main_spacy.py** module is the entry point of the tool, can change the data source of abstracts within this module as indicated by the in-line commments. Can be run as-is as long as all the dependencies are installed
 - **global_functions.py** module is the container for functions that are variably imported into other modules 
-- 3x key pipeline components for extracting **locations, parameters, and sample size** are contained within their respective modules which must be run first to incorporate these pipeline components in the SpaCy language model
-- **pipeline2_keywords_terms.py** is the last component to be run which parses the given corpus along with their context, can only be run after the 3x key components are added to the language model 
-- **pipeline2_visualization.py** contains a series of code blocks for visualization of data extracted using the constructed pipeline, should be run last after all other components are run
-
+- 3x key NLP pipeline components for extracting **locations, parameters, and sample size** are contained within their respective modules which are run within the main_spacy.py module to incorporate these pipeline components in the SpaCy language model
+- **postprocessing.py** runs after all the NLP model components to parse keyword info imported along with each abstract to embed information about stimulation modality and disease type for each abstract which can be used for visualization
+- **pipeline2_visualization.py** contains a visualization object that takes the processed container of abstracts (after being processed by the NLP pipeline and postprocessing step) which is used in main_spacy.py to generate a variety of visualization of the extracted data
 
 Folders:
 - **data**: folder containing datasets and other referenced data containers 
